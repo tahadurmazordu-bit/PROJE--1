@@ -102,10 +102,25 @@
     <p><b>Mod:</b> AI siteyi kendi kursun (tam otomatik)</p>
 
     <div class="chat" id="messages"></div>
+    <small>💾 Konuşmalar otomatik kaydedilir</small>
 
     <!-- AYARLAR -->
     <div id="settings" class="hidden">
       <h4>⚙️ Ayarlar</h4>
+      <label>🗣️ Cevap Stili</label>
+      <select id="style">
+        <option value="normal">Normal</option>
+        <option value="samimi">Samimi</option>
+        <option value="resmi">Resmi</option>
+      </select>
+
+      <label>📏 Cevap Uzunluğu</label>
+      <select id="length">
+        <option value="kisa">Kısa</option>
+        <option value="orta" selected>Orta</option>
+        <option value="uzun">Uzun</option>
+      </select>
+
       <button onclick="toggleTheme()">🌙 Tema Değiştir</button>
       <button onclick="closeSettings()">Kapat</button>
     </div>
@@ -213,12 +228,24 @@
 
     messages.innerHTML += `<div><b>👤 Sen:</b> ${q}</div>`;
 
-    // Normal sohbet mi kontrol et
+    // Konuşma geçmişi
+    let history = JSON.parse(localStorage.getItem('chat') || '[]');
+    history.push({ role: 'user', content: q });
+
     if (!q.toLowerCase().includes('site') && !q.toLowerCase().includes('uygulama')) {
-      messages.innerHTML += `<div><b>🤖 AI:</b> ${normalChatResponse(q)}</div>`;
+      const res = normalChatResponse(q);
+      messages.innerHTML += `<div><b>🤖 AI:</b> ${res}</div>`;
+      history.push({ role: 'ai', content: res });
+      localStorage.setItem('chat', JSON.stringify(history));
       aiInput.value = '';
       return;
     }
+
+    messages.innerHTML += `<div><b>🤖 ${ag} agent:</b> Bunu senin için otomatik yapabilirim. İstersen başlıyorum.</div>`;
+    history.push({ role: 'ai', content: 'Agent modu devrede' });
+    localStorage.setItem('chat', JSON.stringify(history));
+    aiInput.value = '';
+  }
 
     messages.innerHTML += `<div><b>🤖 ${ag} agent:</b> Görev algılandı. Otomatik işlem yapabilirim.</div>`;
     aiInput.value = '';
@@ -331,6 +358,27 @@ body{font-family:Arial;background:#f4f4f4;padding:40px}
   }
 
   function normalChatResponse(q) {
+    const style = document.getElementById('style').value;
+    const length = document.getElementById('length').value;
+
+    let base = "";
+    if (style === 'samimi') base = "Güzel bir soru 🙂 ";
+    if (style === 'resmi') base = "Sorunuza yanıt olarak: ";
+
+    let answer = "";
+    if (q.toLowerCase().includes('yapay zeka')) {
+      answer = "Yapay zeka, bilgisayarların insan benzeri düşünme ve öğrenme yeteneklerini taklit etmesini sağlayan teknolojilerdir.";
+    } else if (q.toLowerCase().includes('merhaba')) {
+      answer = "Merhaba! Sana nasıl yardımcı olabilirim?";
+    } else {
+      answer = "Bu konu hakkında sana yardımcı olmaya çalışırım. İstersen biraz daha detay verebilirsin.";
+    }
+
+    if (length === 'uzun') answer += " Eğer istersen bu konuyu örneklerle ve daha ayrıntılı şekilde de açıklayabilirim.";
+    if (length === 'kisa') answer = answer.split('. ')[0] + '.';
+
+    return base + answer;
+  }
     return "Anladım. " + q + " hakkında sana yardımcı olmaya çalışıyorum.";
   }
 
