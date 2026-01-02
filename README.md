@@ -95,13 +95,20 @@
   <div class="container hidden" id="panelBox">
     <div class="topbar">
       <strong id="welcome"></strong>
-      <button class="secondary" onclick="toggleTheme()">Tema</button>
+      <button class="secondary" onclick="openSettings()">⚙️ Ayarlar</button>
     </div>
 
     <h3>🧠 Emergent Tarzı Yapay Zeka</h3>
     <p><b>Mod:</b> AI siteyi kendi kursun (tam otomatik)</p>
 
     <div class="chat" id="messages"></div>
+
+    <!-- AYARLAR -->
+    <div id="settings" class="hidden">
+      <h4>⚙️ Ayarlar</h4>
+      <button onclick="toggleTheme()">🌙 Tema Değiştir</button>
+      <button onclick="closeSettings()">Kapat</button>
+    </div>
 
     <input id="aiInput" placeholder="Görev veya soru yaz (agent kullanılır)..." />
     <button onclick="askAI()">Gönder</button>
@@ -203,8 +210,17 @@
     const q = aiInput.value.trim();
     const ag = agent.value;
     if (!q) return;
+
     messages.innerHTML += `<div><b>👤 Sen:</b> ${q}</div>`;
-    messages.innerHTML += `<div><b>🤖 ${ag} agent:</b> Görev işlendi. Aşağıdan çıktı üretebilirsin.</div>`;
+
+    // Normal sohbet mi kontrol et
+    if (!q.toLowerCase().includes('site') && !q.toLowerCase().includes('uygulama')) {
+      messages.innerHTML += `<div><b>🤖 AI:</b> ${normalChatResponse(q)}</div>`;
+      aiInput.value = '';
+      return;
+    }
+
+    messages.innerHTML += `<div><b>🤖 ${ag} agent:</b> Görev algılandı. Otomatik işlem yapabilirim.</div>`;
     aiInput.value = '';
   }
 
@@ -304,6 +320,18 @@ body{font-family:Arial;background:#f4f4f4;padding:40px}
       downloadFile('ai-site.html', html);
       messages.innerHTML += `<div><b>✅ Sistem:</b> Site oluşturuldu ve indirildi.</div>`;
     }, 1600);
+  }
+
+  function openSettings() {
+    settings.classList.remove('hidden');
+  }
+
+  function closeSettings() {
+    settings.classList.add('hidden');
+  }
+
+  function normalChatResponse(q) {
+    return "Anladım. " + q + " hakkında sana yardımcı olmaya çalışıyorum.";
   }
 
   function toggleTheme() {
