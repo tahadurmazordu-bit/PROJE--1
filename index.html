@@ -1,0 +1,54 @@
+<h3>🧠 Emergent Tarzı Yapay Zeka</h3>
+<p><b>Mod:</b> AI siteyi kendi kursun (tam otomatik)</p>
+
+<div class="chat" id="messages"></div>
+<small>💾 Konuşmalar otomatik kaydedilir</small>
+
+<!-- AYARLAR -->
+<div id="settings" class="hidden">
+  <h4>⚙️ Ayarlar</h4>
+  <label>🗣️ Cevap Stili</label>
+  <select id="style">
+    <option value="normal">Normal</option>
+    <option value="samimi">Samimi</option>
+    <option value="resmi">Resmi</option>
+  </select>
+
+  <label>📏 Cevap Uzunluğu</label>
+  <select id="length">
+    <option value="kisa">Kısa</option>
+    <option value="orta" selected>Orta</option>
+    <option value="uzun">Uzun</option>
+  </select>
+
+  <button onclick="toggleTheme()">🌙 Tema Değiştir</button>
+  <button onclick="closeSettings()">Kapat</button>
+</div>
+
+<input id="aiInput" placeholder="Görev veya soru yaz (agent kullanılır)..." />
+<button onclick="askAI()">Gönder</button>
+<button onclick="autoBuildSite()" style="margin-top:10px">🌐 Siteyi AI Kursun</button>
+<button onclick="autoBuildSite()" style="margin-top:10px">🌐 Siteyi Otomatik Kur</button>
+<button onclick="autoBuildApp()" style="margin-top:10px">📱 Uygulamayı Otomatik Kur</button>
+
+<hr />
+
+<h4>🤖 Agent Seçimi</h4>
+<select id="agent">
+  <option value="research">Araştırmacı Agent</option>
+  <option value="coder">Yazılımcı Agent</option>
+  <option value="planner">Planlayıcı Agent</option>
+</select>
+
+<h4>📋 Görevler</h4>
+<ul id="tasks"></ul>
+
+<input id="newTask" placeholder="Yeni görev ekle" />
+<button onclick="addTask()">Görev Ekle</button>
+
+<hr />
+
+<input id="newPass" type="password" placeholder="Yeni Şifre" />
+<button onclick="changePassword()">Şifre Değiştir</button>
+
+<button onclick="logout()" style="margin-top:15px">Çıkış Yap</button>
